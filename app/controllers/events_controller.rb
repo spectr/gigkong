@@ -16,7 +16,7 @@ class EventsController < ApplicationController
 
   def getevents
 	  @created_at = Time.now
-    request_ip = request.remote_ip
+    @request_ip = request.remote_ip
     city = params[:city]
 
 
@@ -32,7 +32,7 @@ class EventsController < ApplicationController
 
       else
         if Rails.env.production?
-          @sk = songkick.events(:location  => "ip:#{request_ip}", :type => "concert", :page => "1", :per_page => "20") 
+          @sk = songkick.events(:location  => "ip:#{@request_ip}", :type => "concert", :page => "1", :per_page => "20") 
         else       
           @sk = songkick.events(:location  => "ip:66.130.248.88", :type => "concert", :page => "1", :per_page => "20")
         end 
@@ -40,8 +40,8 @@ class EventsController < ApplicationController
     else 
       if Rails.env.production?
  p "11111111111111111111"
-p request_ip
-        @sk = songkick.events(:location  => "ip:#{request_ip}", :type => "concert", :page => "1", :per_page => "20") 
+p @request_ip
+        @sk = songkick.events(:location  => "ip:#{@request_ip}", :type => "concert", :page => "1", :per_page => "20") 
       else       
         @sk = songkick.events(:location  => "ip:66.130.248.88", :type => "concert", :page => "1", :per_page => "20")
       end    
