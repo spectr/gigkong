@@ -28,25 +28,24 @@ class EventsController < ApplicationController
       city_result = songkick.location_search(:query => city).results.first 
       if city_result.lat && city_result.lng
         @sk = songkick.events(:location  => "geo:#{city_result.lat},#{city_result.lng}", :type => "concert", :page => "1", :per_page => "20")
-        @city_name = city_result.city
 
       else
         if Rails.env.production?
           @sk = songkick.events(:location  => "ip:#{@request_ip}", :type => "concert", :page => "1", :per_page => "20") 
+          @city_name = @sk.results.first
         else       
           @sk = songkick.events(:location  => "ip:66.130.248.88", :type => "concert", :page => "1", :per_page => "20")
         end 
       end
     else 
       if Rails.env.production?
- p "11111111111111111111"
-p @request_ip
         @sk = songkick.events(:location  => "ip:#{@request_ip}", :type => "concert", :page => "1", :per_page => "20") 
       else       
         @sk = songkick.events(:location  => "ip:66.130.248.88", :type => "concert", :page => "1", :per_page => "20")
       end    
     end
-p @sk.results
+
+    @city_name = @sk.results.first.location.city
 
     @sk.results.each do |e|
       headliner = false
@@ -55,7 +54,7 @@ p @sk.results
 
       
       if Event.find_by_sk_id(e.id)
-
+p "IIIIDDDDD"
       else
         e.performances.each do |p|
           if headliner == false
