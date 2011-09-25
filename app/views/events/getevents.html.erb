@@ -3,11 +3,11 @@
 <%= form_tag '/getevents' do  -%>
 
   <div class="field">
-    <%= text_field_tag 'city', nil, :placeholder => "which city are you in?" %>
+    <%= text_field_tag 'city', nil, :placeholder => "other city" %><%= submit_tag 'go' %>
   </div>
 
   <div class="actions">
-    <%= submit_tag 'go' %>
+    <%= @err_message %>
   </div>
 
 <% end -%>

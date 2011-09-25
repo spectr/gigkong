@@ -10,39 +10,53 @@ class EventsController < ApplicationController
     end
   end
 
-  def getcity
-    
+  def getEventsByIp
+    songkick = Songkickr::Remote.new("DodBx8CUdmEW6vg8")
+    if Rails.env.production?
+      @sk = songkick.events(:location  => "ip:#{@request_ip}", :type => "concert", :page => "1", :per_page => "20") 
+    else       
+      @sk = songkick.events(:location  => "ip:66.130.248.88", :type => "concert", :page => "1", :per_page => "20")
+    end 
+  end
+
+  def getEventsByLL(lat, lng)
+    songkick = Songkickr::Remote.new("DodBx8CUdmEW6vg8")
+    @sk = songkick.events(:location  => "geo:#{lat},#{lng}", :type => "concert", :page => "1", :per_page => "20")    
   end
 
   def getevents
 	  @created_at = Time.now
     @request_ip = request.remote_ip
     city = params[:city]
+    @location = false
 
 
     nest = Nestling.new("SZWVLCI8NOX8MA1DG")
-    songkick = Songkickr::Remote.new("DodBx8CUdmEW6vg8")
    
-
+    #Check if a city was entered by the user
     if city
-      city_result = songkick.location_search(:query => city).results.first 
-      if city_result.lat && city_result.lng
-        @sk = songkick.events(:location  => "geo:#{city_result.lat},#{city_result.lng}", :type => "concert", :page => "1", :per_page => "20")
-
+     songkick = Songkickr::Remote.new("DodBx8CUdmEW6vg8")
+      city_results = songkick.location_search(:query => city).results
+      if city_results != [] #Check if city search returned something
+        city_results.each do |c|
+          if c.lat != nil and c.lng != nil #Save first city result that has a longitude and latitude
+            @location = true
+            getEventsByLL(c.lat, c.lng)
+            break
+          end
+        end
+        if @location == false
+          @err_message = "Sorry, we can't get gigs for that city yet but we're working on it"
+          getEventsByIp
+        end
       else
-        if Rails.env.production?
-          @sk = songkick.events(:location  => "ip:#{@request_ip}", :type => "concert", :page => "1", :per_page => "20") 
-          @city_name = @sk.results.first
-        else       
-          @sk = songkick.events(:location  => "ip:66.130.248.88", :type => "concert", :page => "1", :per_page => "20")
-        end 
+        @err_message = "Ooops we couldn't find that city"
+        getEventsByIp
       end
+
+    #City was not entered by user
     else 
-      if Rails.env.production?
-        @sk = songkick.events(:location  => "ip:#{@request_ip}", :type => "concert", :page => "1", :per_page => "20") 
-      else       
-        @sk = songkick.events(:location  => "ip:66.130.248.88", :type => "concert", :page => "1", :per_page => "20")
-      end    
+      getEventsByIp   
     end
 
     @city_name = @sk.results.first.location.city
@@ -54,7 +68,6 @@ class EventsController < ApplicationController
 
       
       if Event.find_by_sk_id(e.id)
-p "IIIIDDDDD"
       else
         e.performances.each do |p|
           if headliner == false
