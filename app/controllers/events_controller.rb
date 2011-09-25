@@ -18,14 +18,22 @@ class EventsController < ApplicationController
 	  @created_at = Time.now
     request_ip = request.remote_ip
     city = params[:city]
-    
+
+    p "CITYYYYYYYYYYY"
+    p params[:city]   
+
     nest = Nestling.new("SZWVLCI8NOX8MA1DG")
     songkick = Songkickr::Remote.new("DodBx8CUdmEW6vg8")
     city_result = songkick.location_search(:query => "montreal").results.first
-    
+        
+    p "LAT"   
+    p city_result.lat
+
     if city
       city_result = songkick.location_search(:query => "montreal").results.first   
-      @sk = songkick.events(:location  => "geo:45.5,-73.5833", :type => "concert", :page => "1", :per_page => "20")
+      @sk = songkick.events(:location  => "geo:#{city_result.lat},#{city_result.lng}", :type => "concert", :page => "1", :per_page => "20")
+      @city_name = city_result.city
+      p "11111111111111"
     else 
       if Rails.env.production?
         @sk = songkick.events(:location  => "ip:#{request_ip}", :type => "concert", :page => "1", :per_page => "20") 
@@ -60,12 +68,12 @@ class EventsController < ApplicationController
           video = nest.artist(headliner_name).video.first
         rescue
         end
-	      @event = Event.create(:headliner => headliner_name, :other_performers_names => other_performers_names, :start_date => start_date, :venue_name => venue_name, :video => video, :sk_id => e.id)   
+	      @event = Event.create(:headliner => headliner_name, :other_performers_names => other_performers_names, :start_date => start_date, :venue_name => venue_name, :video => video, :sk_id => e.id, :city_name => @city_name)   
           
       end 
     end
     
-    @events = Event.all
+    @events = Event.where("city = ?", @city_name)
 	  
 
     #redirect_to "/"

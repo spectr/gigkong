@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110925153133) do
+ActiveRecord::Schema.define(:version => 20110925172830) do
 
   create_table "artists", :force => true do |t|
     t.string   "name"
@@ -30,8 +30,10 @@ ActiveRecord::Schema.define(:version => 20110925153133) do
     t.string   "other_performers_names"
     t.integer  "sk_id"
     t.text     "video"
+    t.string   "city"
   end
 
+  add_index "events", ["city"], :name => "index_events_on_city"
   add_index "events", ["sk_id"], :name => "index_events_on_sk_id"
 
   create_table "venues", :force => true do |t|
