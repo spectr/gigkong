@@ -1,0 +1,44 @@
+<%= form_tag '/getevents' do  -%>
+
+  <div class="field">
+    <%= text_field_tag 'city', nil, :placeholder => "which city are you in?" %>
+  </div>
+
+  <div class="actions">
+    <%= submit_tag 'go' %>
+  </div>
+
+<% end -%>
+
+<h1></h1>
+
+<table>
+  <tr>
+    <th>Artist</th>
+    <th>Other Performers</th>
+    <th>Venue</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @events.each do |event| %>
+  <tr>
+    <td><%= event.headliner %></td>
+    <td><%= event.other_performers_names %></td>
+    <td><%= event.venue_name %></td>
+    <td><%= event.start_date %></td>
+    <td><%= link_to 'Show', event %></td>
+    <td><%= link_to 'Edit', edit_event_path(event) %></td>
+    <td><%= link_to 'Destroy', event, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Event', new_event_path %>
+
+
+
+<iframe width="560" height="315" src="http://www.youtube.com/embed/-XhOlyjz3pI" frameborder="0" allowfullscreen></iframe>
