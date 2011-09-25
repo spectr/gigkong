@@ -19,21 +19,23 @@ class EventsController < ApplicationController
     request_ip = request.remote_ip
     city = params[:city]
 
-    p "CITYYYYYYYYYYY"
-    p params[:city]   
 
     nest = Nestling.new("SZWVLCI8NOX8MA1DG")
     songkick = Songkickr::Remote.new("DodBx8CUdmEW6vg8")
-    city_result = songkick.location_search(:query => "montreal").results.first
-        
-    p "LAT"   
-    p city_result.lat
+   
 
     if city
-      city_result = songkick.location_search(:query => "montreal").results.first   
-      @sk = songkick.events(:location  => "geo:#{city_result.lat},#{city_result.lng}", :type => "concert", :page => "1", :per_page => "20")
-      @city_name = city_result.city
-      p "11111111111111"
+      city_result = songkick.location_search(:query => city).results.first 
+      if city_result.lat && city_result.lng
+        @sk = songkick.events(:location  => "geo:#{city_result.lat},#{city_result.lng}", :type => "concert", :page => "1", :per_page => "20")
+        @city_name = city_result.city
+      else
+        if Rails.env.production?
+          @sk = songkick.events(:location  => "ip:#{request_ip}", :type => "concert", :page => "1", :per_page => "20") 
+        else       
+          @sk = songkick.events(:location  => "ip:66.130.248.88", :type => "concert", :page => "1", :per_page => "20")
+        end 
+      end
     else 
       if Rails.env.production?
         @sk = songkick.events(:location  => "ip:#{request_ip}", :type => "concert", :page => "1", :per_page => "20") 
@@ -65,10 +67,16 @@ class EventsController < ApplicationController
         sk_id = e.id
         
         begin
-          video = nest.artist(headliner_name).video.first
+          video = nest.artist(headliner_name).video.first.url
         rescue
         end
-	      @event = Event.create(:headliner => headliner_name, :other_performers_names => other_performers_names, :start_date => start_date, :venue_name => venue_name, :video => video, :sk_id => e.id, :city_name => @city_name)   
+
+        begin
+          image = nest.artist(headliner_name).images.first.url
+        rescue
+        end
+
+	      @event = Event.create(:headliner => headliner_name, :other_performers_names => other_performers_names, :start_date => start_date, :venue_name => venue_name, :video => video, :sk_id => e.id, :city => @city_name, :image => image)   
           
       end 
     end
