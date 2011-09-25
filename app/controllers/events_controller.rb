@@ -24,8 +24,9 @@ class EventsController < ApplicationController
     #city_result = songkick.location_search(:query => "montreal").results.first
     #@city = songkick.location_search(:query => "asdfmontreal").results.first
     
-    if city
-      
+
+    if Rails.env.production?
+     @sk = songkick.events(:location  => "ip:#{request_ip}", :type => "concert", :page => "1", :per_page => "50")      
     else    
      @sk = songkick.events(:location  => "ip:66.130.248.88", :type => "concert", :page => "1", :per_page => "50")
     end
