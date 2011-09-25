@@ -21,14 +21,19 @@ class EventsController < ApplicationController
     
     nest = Nestling.new("SZWVLCI8NOX8MA1DG")
     songkick = Songkickr::Remote.new("DodBx8CUdmEW6vg8")
-    #city_result = songkick.location_search(:query => "montreal").results.first
-    #@city = songkick.location_search(:query => "asdfmontreal").results.first
-    
+    city_result = songkick.location_search(:query => "montreal").results.first
+    lat
 
-    if Rails.env.production?
-     @sk = songkick.events(:location  => "ip:#{request_ip}", :type => "concert", :page => "1", :per_page => "50")      
-    else    
-     @sk = songkick.events(:location  => "ip:66.130.248.88", :type => "concert", :page => "1", :per_page => "50")
+    
+    if city
+      city_result = songkick.location_search(:query => "montreal").results.first   
+      @sk = songkick.events(:location  => "geo:45.5,-73.5833", :type => "concert", :page => "1", :per_page => "20")
+    else 
+      if Rails.env.production?
+        @sk = songkick.events(:location  => "ip:#{request_ip}", :type => "concert", :page => "1", :per_page => "20") 
+      else       
+        @sk = songkick.events(:location  => "ip:66.130.248.88", :type => "concert", :page => "1", :per_page => "20")
+      end    
     end
 
     @sk.results.each do |e|
