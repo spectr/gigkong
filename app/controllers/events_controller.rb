@@ -16,7 +16,7 @@ class EventsController < ApplicationController
 
   def getevents
 	  @created_at = Time.now
-    @request_ip = request.remote_ip
+    @request_ip = env[‘HTTP_X_REAL_IP’] ||= env[‘REMOTE_ADDR’] 
     city = params[:city]
 
 
