@@ -46,6 +46,7 @@ p @request_ip
         @sk = songkick.events(:location  => "ip:66.130.248.88", :type => "concert", :page => "1", :per_page => "20")
       end    
     end
+p @sk.results
 
     @sk.results.each do |e|
       headliner = false
