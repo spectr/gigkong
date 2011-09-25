@@ -29,6 +29,7 @@ class EventsController < ApplicationController
       if city_result.lat && city_result.lng
         @sk = songkick.events(:location  => "geo:#{city_result.lat},#{city_result.lng}", :type => "concert", :page => "1", :per_page => "20")
         @city_name = city_result.city
+
       else
         if Rails.env.production?
           @sk = songkick.events(:location  => "ip:#{request_ip}", :type => "concert", :page => "1", :per_page => "20") 
