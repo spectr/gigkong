@@ -22,8 +22,6 @@ class EventsController < ApplicationController
     nest = Nestling.new("SZWVLCI8NOX8MA1DG")
     songkick = Songkickr::Remote.new("DodBx8CUdmEW6vg8")
     city_result = songkick.location_search(:query => "montreal").results.first
-    lat
-
     
     if city
       city_result = songkick.location_search(:query => "montreal").results.first   
