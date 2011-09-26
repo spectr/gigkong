@@ -13,19 +13,14 @@
 <% end -%>
 
 <div class="container">
-  <div class="row">
-    <div class="threecol">
-      <p>Column 1</p>
-    </div>
-    <div class="threecol">
-      <p>Column 2</p>
-    </div>
-    <div class="threecol">
-      <p>Column 3</p>
-    </div>
-      <div class="threecol last">
-    <p>Column 4</p>
-    </div>
+  <div class="sevencol grey-back">
+    <% @events.in_groups_of(3, false) do |group| %>
+      <div class="row">
+        <% for event in group %>
+            <img src="<%= event.image %>" alt="<%= event.headliner %> in <%= event.city %>" />
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </div>
 
@@ -41,7 +36,7 @@
 
 <% @events.each do |event| %>
   <tr>
-    <td><%= event.headliner %></td>
+    <td><%= event.image %></td>
     <td><%= event.other_performers_names %></td>
     <td><%= event.venue_name %></td>
     <td><%= event.start_date %></td>
