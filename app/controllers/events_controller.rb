@@ -26,7 +26,11 @@ class EventsController < ApplicationController
 
   def getevents
 	  @created_at = Time.now
-    @request_ip = request.remote_ip
+    if request.remote_ip
+     @request_ip = request.remote_nd
+    else
+      @request_ip = "66.130.248.88"
+    end
     city = params[:city]
     @location = false
 
