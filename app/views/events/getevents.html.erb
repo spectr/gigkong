@@ -6,47 +6,30 @@
     <%= text_field_tag 'city', nil, :placeholder => "other city" %><%= submit_tag 'go' %>
   </div>
 
-  <div class="actions">
+  <div class="">
     <%= @err_message %>
   </div>
 
 <% end -%>
 
 <div class="container">
-  <div class="sevencol grey-back">
-    <% @events.in_groups_of(3, false) do |group| %>
-      <div class="row">
-        <% for event in group %>
-            <img src="<%= event.image %>" alt="<%= event.headliner %> in <%= event.city %>" />
-        <% end %>
+  <div class="sevencol">
+    <% @events.each do |event| %>
+      <div class="row gig-row">
+        <p class="healiner"><%= event.headliner %></p>
+        <p class="other-acts"><%= "With #{event.other_performers_names}" if event.other_performers_names != ""%></p>
+        <p class="other-acts">@<%= event.venue_name %></p>
       </div>
     <% end %>
   </div>
+  <div class="fivecol">
+    
+  </div>
 </div>
 
-<table>
-  <tr>
-    <th>Artist</th>
-    <th>Other Performers</th>
-    <th>Venue</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @events.each do |event| %>
-  <tr>
-    <td><%= event.image %></td>
-    <td><%= event.other_performers_names %></td>
-    <td><%= event.venue_name %></td>
-    <td><%= event.start_date %></td>
-    <td><%= link_to 'Show', event %></td>
-    <td><%= link_to 'Edit', edit_event_path(event) %></td>
-    <td><%= link_to 'Destroy', event, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
 
 
+<script type="text/javascript" src="http://tinychat.com/chatbar/bar.js"></script>
+<script type="text/javascript">
+chatbar.embed({ room: "cc2ac9c6160e00a2ebb9c9f96f64eb92", theme: "white", facebook_like: true, width: "fluid", align: "center", position: "bottom"});
+</script>

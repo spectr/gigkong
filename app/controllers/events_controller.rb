@@ -25,6 +25,10 @@ class EventsController < ApplicationController
   end
 
   def getevents
+    @events = Event.where("city = ?", "Szczecin, Poland")
+  end
+  
+  def getevents1
 	  @created_at = Time.now
     if request.remote_ip
      @request_ip = request.remote_nd
