@@ -1,5 +1,6 @@
 <h1><%= @city_name %> gigs</h1>
 
+<div class="hidden">
 <%= form_tag '/getevents' do  -%>
 
   <div class="field">
@@ -11,14 +12,22 @@
   </div>
 
 <% end -%>
+</div>
 
 <div class="container">
   <div class="sevencol">
     <% @events.each do |event| %>
       <div class="row gig-row">
+        <div class="gig-top">      
+          <%= hidden_field_tag event.headliner, event.headliner %>
+          <div class="hidden gig-top-content">   
+            <iframe1 width="560" height="315" src="<%= event.video if event.video %>" frameborder="0" allowfullscreen></iframe>   
+          </div>
+        </div>
         <p class="healiner"><%= event.headliner %></p>
         <p class="other-acts"><%= "With #{event.other_performers_names}" if event.other_performers_names != ""%></p>
         <p class="other-acts">@<%= event.venue_name %></p>
+        <p class="other-acts"><%= event.start_date %></p>
       </div>
     <% end %>
   </div>
@@ -28,8 +37,3 @@
 </div>
 
 
-
-<script type="text/javascript" src="http://tinychat.com/chatbar/bar.js"></script>
-<script type="text/javascript">
-chatbar.embed({ room: "cc2ac9c6160e00a2ebb9c9f96f64eb92", theme: "white", facebook_like: true, width: "fluid", align: "center", position: "bottom"});
-</script>

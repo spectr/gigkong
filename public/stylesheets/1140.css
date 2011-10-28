@@ -87,6 +87,9 @@ img {
 	height: auto;
 }
 
+.hidden {
+  visibility: hidden;
+}
 
 /* Smaller screens */
 

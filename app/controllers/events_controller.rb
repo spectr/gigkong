@@ -24,14 +24,14 @@ class EventsController < ApplicationController
     @sk = songkick.events(:location  => "geo:#{lat},#{lng}", :type => "concert", :page => "1", :per_page => "20")    
   end
 
-  def getevents
+  def getevents1
     @events = Event.where("city = ?", "Szczecin, Poland")
   end
   
-  def getevents1
+  def getevents
 	  @created_at = Time.now
     if request.remote_ip
-     @request_ip = request.remote_nd
+     @request_ip = request.remote_ip
     else
       @request_ip = "66.130.248.88"
     end
@@ -105,7 +105,7 @@ class EventsController < ApplicationController
       end 
     end
     
-    @events = Event.where("city = ?", @city_name)
+    @events = Event.where("city = ? and start_date >= ?", @city_name, Time.now).limit(10)
 	  
 
     #redirect_to "/"
